@@ -1,0 +1,49 @@
+import uuid
+
+from db.sector_dao import SectorDao
+from exception.business_exception import BusinessException
+
+
+class SectorService:
+    def __init__(self):
+        self.db = SectorDao()
+
+    def get_all_sectors(self):
+        return self.db.get_all_sector()
+
+    def get_sector_by_id(self, sector_id):
+        dict_sector = self.db.get_sector_by_id(sector_id)
+        if dict_sector is None:
+            raise BusinessException("Business Sector not found", 404)
+        return dict_sector
+
+    def update_sector_by_id(self, sector_id, sector):
+        dict_sector = self.db.get_sector_by_id(sector_id)
+        if dict_sector is None:
+            raise BusinessException("Business Sector not found", 404)
+        if dict_sector["expired_at"] is not None:
+            raise BusinessException("Invalid Business Sector", 409)
+        self.db.update_sector_by_id(sector_id, sector)
+        return {
+            "id": sector_id,
+            "sector_name": sector.sector_name,
+        }
+
+    def delete_sector_by_id(self, sector_id):
+        dict_sector = self.db.get_sector_by_id(sector_id)
+        if dict_sector is None:
+            raise BusinessException("Business Sector not found", 404)
+        if dict_sector["expired_at"] is not None:
+            raise BusinessException("Invalid Business Sector", 409)
+        self.db.delete_sector_by_id(sector_id)
+
+    def create_sector(self, sector):
+        list_sector = self.db.get_all_sector()
+        if len(list_sector) > 0:
+            raise BusinessException("Business Sector exists", 409)
+        sector_id = str(uuid.uuid4())
+        self.db.create_sector(sector_id, sector)
+        return {
+            "id": sector_id,
+            "sector_name": sector.sector_name,
+        }

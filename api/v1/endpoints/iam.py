@@ -2,7 +2,7 @@ from fastapi import APIRouter, Response, Cookie
 
 from exception.security_exception import SecurityException
 from schemas.iam_schema import LoginModelReq
-from service.iam.iam_service import IamService
+from service.iam_service import IamService
 
 router = APIRouter()
 

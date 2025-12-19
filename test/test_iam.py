@@ -1,4 +1,4 @@
-from service.iam.iam_service import IamService
+from service.iam_service import IamService
 
 iam_service = IamService()
 iam_service.check_access_token('c55ed6573d8798eecbcd122bc6587bc545707ac4cb1b32835b37414767af1684120c5b2205001e995e2d81126ac316c248653d735acdecece18aa5d89b4fca0d')
