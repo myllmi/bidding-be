@@ -1,0 +1,53 @@
+###
+POST http://localhost:8000/api/v1/iam/login
+Accept: application/json
+
+{
+    "email": "admin@mail.com",
+    "password": "admin"
+}
+
+> {%
+    client.global.set("access_token", response.body.token);
+%}
+
+###
+GET http://localhost:8000/api/v1/iam/refresh
+Accept: application/json
+
+> {%
+    client.global.set("access_token", response.body.token);
+%}
+
+###
+GET http://localhost:8000/api/v1/sector/list
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+###
+GET http://localhost:8000/api/v1/sector/5e48dd22-69bd-4db1-9e33-8f02104d20ad
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+###
+POST http://localhost:8000/api/v1/sector
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+{
+    "sector_name": "Insurance Sector"
+}
+
+###
+PUT localhost:8000/api/v1/sector/5e48dd22-69bd-4db1-9e33-8f02104d20ad
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+{
+    "sector_name": "Public Sector"
+}
+
+###
+DELETE localhost:8000/api/v1/sector/5e48dd22-69bd-4db1-9e33-8f02104d20ad
+Accept: application/json
+Authorization: Bearer {{access_token}}

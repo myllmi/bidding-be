@@ -1,7 +1,8 @@
 from typing import List
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
+from filter.request_filter import check_admin_role
 from schemas.sector_schema import SectorModel
 from service.sector_service import SectorService
 
@@ -28,7 +29,8 @@ def get_business_sector(sector_id: str):
 
 @router.post("",
              summary="Create a new business sector",
-             description="Create a new business sector")
+             description="Create a new business sector",
+             dependencies=[Depends(check_admin_role)])
 def create_business_sector(sector: SectorModel):
     sector_service = SectorService()
     return sector_service.create_sector(sector)
@@ -37,7 +39,8 @@ def create_business_sector(sector: SectorModel):
 @router.put("/{sector_id}",
             response_model=SectorModel,
             summary="Update a business sector",
-            description="Update a business sector")
+            description="Update a business sector",
+            dependencies=[Depends(check_admin_role)])
 def update_business_sector(sector_id: str, sector: SectorModel):
     sector_service = SectorService()
     return sector_service.update_sector_by_id(sector_id, sector)
@@ -45,7 +48,8 @@ def update_business_sector(sector_id: str, sector: SectorModel):
 
 @router.delete("/{sector_id}",
                summary="Delete a business sector",
-               description="Delete a business sector")
+               description="Delete a business sector",
+               dependencies=[Depends(check_admin_role)])
 def delete_business_sector(sector_id: str):
     sector_service = SectorService()
     sector_service.delete_sector_by_id(sector_id)

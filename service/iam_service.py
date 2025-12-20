@@ -1,8 +1,21 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date, time, timedelta
+from decimal import Decimal
 
 from db.iam_dao import IamDao
 from exception.security_exception import SecurityException
 from util.helper import gen_hash_512
+
+
+def check_token(dict_login):
+    if dict_login is None:
+        raise SecurityException("Invalid access token", 401)
+    if dict_login['expired_at'] is not None:
+        raise SecurityException("Invalid token", 401)
+    expires_at = dict_login['token_valid_until']
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    if datetime.now(timezone.utc) > expires_at:
+        raise SecurityException("Token expired", 401)
 
 
 class IamService:
@@ -44,12 +57,10 @@ class IamService:
 
     def check_access_token(self, access_token):
         dict_login = self.db.get_login_by_access_token(access_token)
-        if dict_login is None:
-            raise SecurityException("Invalid access token", 401)
-        if dict_login['expired_at'] is not None:
-            raise SecurityException("Invalid token", 401)
-        expires_at = dict_login['token_valid_until']
-        if expires_at.tzinfo is None:
-            expires_at = expires_at.replace(tzinfo=timezone.utc)
-        if datetime.now(timezone.utc) > expires_at:
-            raise SecurityException("Token expired", 401)
+        check_token(dict_login)
+
+    def check_admin_role(self, access_token):
+        dict_user = self.db.get_user_by_access_token(access_token)
+        check_token(dict_user)
+        if dict_user['role'] != 'AD':
+            raise SecurityException("Permission denied", 403)
