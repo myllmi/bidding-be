@@ -8,12 +8,19 @@ security = HTTPBearer()
 
 
 def check_access_token(credentials: HTTPAuthorizationCredentials = Depends(security), iam_service: IamService = Depends(IamService)):
-    if credentials.scheme.upper() != "BEARER":
-        raise SecurityException("Invalid credentials", 401)
+    check_bearer(credentials)
     iam_service.check_access_token(credentials.credentials)
 
 
 def check_admin_role(credentials: HTTPAuthorizationCredentials = Depends(security), iam_service: IamService = Depends(IamService)):
+    check_bearer(credentials)
+    iam_service.check_admin_role(credentials.credentials, iam_service.ROLE_ADMIN)
+
+def check_analyst_role(credentials: HTTPAuthorizationCredentials = Depends(security), iam_service: IamService = Depends(IamService)):
+    check_bearer(credentials)
+    iam_service.check_admin_role(credentials.credentials, iam_service.ROLE_ANALYST)
+
+
+def check_bearer(credentials: HTTPAuthorizationCredentials):
     if credentials.scheme.upper() != "BEARER":
         raise SecurityException("Invalid credentials", 401)
-    iam_service.check_admin_role(credentials.credentials)
