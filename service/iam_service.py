@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, timezone, date, time, timedelta
 from decimal import Decimal
 
@@ -75,9 +76,19 @@ class IamService:
         dict_user = self.db.get_user_by_id(user_id)
         if dict_user is None:
             raise BusinessException("User not found", 404)
+        return dict_user
+
+    def create_user(self, user_data):
+        list_user = self.db.get_user_by_email(user_data.email)
+        if list_user is not None:
+            raise BusinessException("User exists, check your email", 409)
+        user_id = str(uuid.uuid4())
+        user_data.password = gen_hash_512(user_data.password)
+        self.db.create_user(user_id, user_data)
         return {
-            "name": dict_user['name'],
-            "email": dict_user['email'],
-            "role": dict_user['role']
+            "id": user_id,
+            "email": user_data.email,
+            "name": user_data.name,
+            "role": user_data.role,
         }
 

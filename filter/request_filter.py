@@ -7,18 +7,28 @@ from service.iam_service import IamService
 security = HTTPBearer()
 
 
-def check_access_token(credentials: HTTPAuthorizationCredentials = Depends(security), iam_service: IamService = Depends(IamService)):
+def check_access_token(credentials: HTTPAuthorizationCredentials = Depends(security),
+                       iam_service: IamService = Depends(IamService)):
     check_bearer(credentials)
     iam_service.check_access_token(credentials.credentials)
 
 
-def check_admin_role(credentials: HTTPAuthorizationCredentials = Depends(security), iam_service: IamService = Depends(IamService)):
+def check_admin_role(credentials: HTTPAuthorizationCredentials = Depends(security),
+                     iam_service: IamService = Depends(IamService)):
     check_bearer(credentials)
     iam_service.check_admin_role(credentials.credentials, iam_service.ROLE_ADMIN)
 
-def check_analyst_role(credentials: HTTPAuthorizationCredentials = Depends(security), iam_service: IamService = Depends(IamService)):
+
+def check_analyst_role(credentials: HTTPAuthorizationCredentials = Depends(security),
+                       iam_service: IamService = Depends(IamService)):
     check_bearer(credentials)
     iam_service.check_admin_role(credentials.credentials, iam_service.ROLE_ANALYST)
+
+
+def check_manager_role(credentials: HTTPAuthorizationCredentials = Depends(security),
+                       iam_service: IamService = Depends(IamService)):
+    check_bearer(credentials)
+    iam_service.check_admin_role(credentials.credentials, iam_service.ROLE_MANAGER)
 
 
 def check_bearer(credentials: HTTPAuthorizationCredentials):

@@ -13,6 +13,19 @@ Accept: application/json
 %}
 
 ###
+POST http://localhost:8000/api/v1/iam/login
+Accept: application/json
+
+{
+    "email": "caio@mail.com",
+    "password": "123ABC#"
+}
+
+> {%
+    client.global.set("access_token", response.body.token);
+%}
+
+###
 GET http://localhost:8000/api/v1/iam/refresh
 Accept: application/json
 
@@ -26,11 +39,21 @@ Accept: application/json
 Authorization: Bearer {{access_token}}
 
 ###
-GET http://localhost:8000/api/v1/iam/user/fd7fcb70-f7f7-4ccd-bf5a-117699666601
+GET http://localhost:8000/api/v1/iam/user/59703a4d-e067-4fdc-8f87-82600d7764f2
 Accept: application/json
 Authorization: Bearer {{access_token}}
 
+###
+POST localhost:8000/api/v1/iam/user
+Accept: application/json
+Authorization: Bearer {{access_token}}
 
+{
+    "email": "caroline@mail.com",
+    "name": "Caroline Nascimento",
+    "password": "123ABC#",
+    "role": "AN"
+}
 
 
 ### Business Sector

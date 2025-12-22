@@ -17,16 +17,16 @@ class SectorService:
             raise BusinessException("Business Sector not found", 404)
         return dict_sector
 
-    def update_sector_by_id(self, sector_id, sector):
+    def update_sector_by_id(self, sector_id, sector_data):
         dict_sector = self.db.get_sector_by_id(sector_id)
         if dict_sector is None:
             raise BusinessException("Business Sector not found", 404)
         if dict_sector["expired_at"] is not None:
             raise BusinessException("Invalid Business Sector", 409)
-        self.db.update_sector_by_id(sector_id, sector)
+        self.db.update_sector_by_id(sector_id, sector_data)
         return {
             "id": sector_id,
-            "sector_name": sector.sector_name,
+            "sector_name": sector_data.sector_name,
         }
 
     def delete_sector_by_id(self, sector_id):
@@ -37,13 +37,13 @@ class SectorService:
             raise BusinessException("Invalid Business Sector", 409)
         self.db.delete_sector_by_id(sector_id)
 
-    def create_sector(self, sector):
-        list_sector = self.db.get_all_sector()
+    def create_sector(self, sector_data):
+        list_sector = self.db.get_sector_by_name(sector_data.sector_name)
         if len(list_sector) > 0:
-            raise BusinessException("Business Sector exists", 409)
+            raise BusinessException(f"Business Sector exists ({len(list_sector)})", 409)
         sector_id = str(uuid.uuid4())
-        self.db.create_sector(sector_id, sector)
+        self.db.create_sector(sector_id, sector_data)
         return {
             "id": sector_id,
-            "sector_name": sector.sector_name,
+            "sector_name": sector_data.sector_name,
         }

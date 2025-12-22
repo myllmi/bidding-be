@@ -57,3 +57,10 @@ class IamDao(Dao):
             sql = "SELECT * FROM bidding.user WHERE id = %s AND role != 'AD'"
             cursor_user_by_id.execute(sql, (user_id.strip(),))
             return cursor_user_by_id.fetchone()
+
+    def create_user(self, user_id, user_data):
+        with self.db.cursor(dictionary=True) as cursor_create_user:
+            sql = "INSERT INTO bidding.user (id, name, email, password, role, created_at) VALUES (%s, %s, %s, %s, %s, %s)"
+            val = (user_id, user_data.name, user_data.email, user_data.password, user_data.role, datetime.now(timezone.utc))
+            cursor_create_user.execute(sql, val)
+            self.db.commit()
