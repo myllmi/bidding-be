@@ -1,11 +1,11 @@
 import uuid
-from datetime import datetime, timezone, date, time, timedelta
-from decimal import Decimal
+from datetime import datetime, timezone
 
 from db.iam_dao import IamDao
 from exception.business_exception import BusinessException
 from exception.security_exception import SecurityException
 from util.helper import gen_hash_512
+
 
 def check_token(dict_login):
     if dict_login is None:
@@ -85,11 +85,13 @@ class IamService:
         user_id = str(uuid.uuid4())
         user_data.password = gen_hash_512(user_data.password)
         self.db.create_user(user_id, user_data)
+        self.refresh_user_sector(user_id, user_data.list_id_sector)
         return {
             "id": user_id,
             "email": user_data.email,
             "name": user_data.name,
             "role": user_data.role,
+            "list_id_sector": user_data.list_id_sector,
         }
 
     def update_user(self, user_id, user_data):
@@ -99,11 +101,13 @@ class IamService:
         if dict_user["expired_at"] is not None:
             raise BusinessException("Invalid User", 409)
         self.db.update_user_by_id(user_id, user_data)
+        self.refresh_user_sector(user_id, user_data.list_id_sector)
         return {
             "id": user_id,
             "email": user_data.email,
             "name": user_data.name,
             "role": user_data.role,
+            "list_id_sector": user_data.list_id_sector,
         }
 
     def delete_user(self, user_id):
@@ -112,8 +116,12 @@ class IamService:
             raise BusinessException("User not found", 404)
         if dict_user["expired_at"] is not None:
             raise BusinessException("Invalid User", 409)
-        # TODO: Check if user has tender assigned to him
+        # TODO: Check if user has tender assigned to hi
         if dict_user["role"] == "AD":
             raise BusinessException("Admin user can't be deleted!", 409)
         self.db.delete_user_by_id(user_id)
 
+    def refresh_user_sector(self, user_id, list_id_sector):
+        self.db.delete_user_sector(user_id)
+        for id_sector in list_id_sector:
+            self.db.add_user_sector(user_id, id_sector)

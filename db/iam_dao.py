@@ -17,7 +17,8 @@ class IamDao(Dao):
         expire_refresh_token = datetime.now(timezone.utc) + timedelta(days=30)
         with self.db.cursor(dictionary=True) as cursor_login:
             sql = "INSERT INTO bidding.login (id, token, refresh_token, created_at, token_valid_until, refresh_token_valid_until, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            val = (str(uuid.uuid4()), login_token, refresh_token, datetime.now(timezone.utc), expire_token, expire_refresh_token, id_user)
+            val = (str(uuid.uuid4()), login_token, refresh_token, datetime.now(timezone.utc), expire_token,
+                   expire_refresh_token, id_user)
             cursor_login.execute(sql, val)
             self.db.commit()
 
@@ -61,7 +62,8 @@ class IamDao(Dao):
     def create_user(self, user_id, user_data):
         with self.db.cursor(dictionary=True) as cursor_create_user:
             sql = "INSERT INTO bidding.user (id, name, email, password, role, created_at) VALUES (%s, %s, %s, %s, %s, %s)"
-            val = (user_id, user_data.name, user_data.email, user_data.password, user_data.role, datetime.now(timezone.utc))
+            val = (user_id, user_data.name, user_data.email, user_data.password, user_data.role,
+                   datetime.now(timezone.utc))
             cursor_create_user.execute(sql, val)
             self.db.commit()
 
@@ -77,4 +79,18 @@ class IamDao(Dao):
             sql = "UPDATE bidding.user SET expired_at = CURRENT_TIMESTAMP WHERE id = %s"
             val = (user_id.strip(),)
             cursor_delete_user.execute(sql, val)
+            self.db.commit()
+
+    def delete_user_sector(self, user_id):
+        with self.db.cursor(dictionary=True) as cursor_delete_user_sector:
+            sql = "DELETE FROM bidding.user_business_sector WHERE user_id = %s"
+            val = (user_id.strip(),)
+            cursor_delete_user_sector.execute(sql, val)
+            self.db.commit()
+
+    def add_user_sector(self, user_id, id_sector):
+        with self.db.cursor(dictionary=True) as cursor_add_user_sector:
+            sql = "INSERT INTO bidding.user_business_sector (id, user_id, business_sector_id) VALUES (%s, %s, %s)"
+            val = (str(uuid.uuid4()), user_id.strip(), id_sector.strip())
+            cursor_add_user_sector.execute(sql, val)
             self.db.commit()

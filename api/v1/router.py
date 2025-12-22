@@ -1,7 +1,6 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
 from api.v1.endpoints import iam_endpoint, sector_endpoint
-from filter.request_filter import check_access_token
 
 api_router = APIRouter()
 

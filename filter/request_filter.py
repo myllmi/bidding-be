@@ -1,4 +1,4 @@
-from fastapi import Header, APIRouter, Depends, HTTPException
+from fastapi import Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from exception.security_exception import SecurityException

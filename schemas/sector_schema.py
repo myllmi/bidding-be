@@ -1,11 +1,13 @@
-from pydantic import BaseModel
+from schemas.camel_schema import CamelModelBase
 
 
-class SectorModelReq(BaseModel):
+class SectorModelBase(CamelModelBase):
+    sector_name: str
+
+
+class SectorModelReq(SectorModelBase):
     id: str | None = None
-    sector_name: str
 
 
-class SectorModelRes(BaseModel):
+class SectorModelRes(SectorModelBase):
     id: str
-    sector_name: str
