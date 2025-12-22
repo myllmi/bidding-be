@@ -1,31 +1,17 @@
-### IAM
-###
+### Generate Access Token
 POST http://localhost:8000/api/v1/iam/login
 Accept: application/json
 
 {
-    "email": "admin@mail.com",
-    "password": "admin"
+    "email": "{{email}}",
+    "password": "{{password}}"
 }
 
 > {%
     client.global.set("access_token", response.body.token);
 %}
 
-###
-POST http://localhost:8000/api/v1/iam/login
-Accept: application/json
-
-{
-    "email": "caio@mail.com",
-    "password": "123ABC#"
-}
-
-> {%
-    client.global.set("access_token", response.body.token);
-%}
-
-###
+### Refresh Access Token
 GET http://localhost:8000/api/v1/iam/refresh
 Accept: application/json
 
@@ -33,41 +19,55 @@ Accept: application/json
     client.global.set("access_token", response.body.token);
 %}
 
-###
+### List All Users
 GET http://localhost:8000/api/v1/iam/user/list
 Accept: application/json
 Authorization: Bearer {{access_token}}
 
-###
-GET http://localhost:8000/api/v1/iam/user/59703a4d-e067-4fdc-8f87-82600d7764f2
+### Get User by ID
+GET http://localhost:8000/api/v1/iam/user/4d07ee63-ad16-4c6c-b8bb-2b956580bef5
 Accept: application/json
 Authorization: Bearer {{access_token}}
 
-###
+### Create New User
 POST localhost:8000/api/v1/iam/user
 Accept: application/json
 Authorization: Bearer {{access_token}}
 
 {
-    "email": "caroline@mail.com",
-    "name": "Caroline Nascimento",
+    "email": "caio@mail.com",
+    "name": "Caio Nascimento",
     "password": "123ABC#",
     "role": "AN"
 }
 
+### Update User
+PUT localhost:8000/api/v1/iam/user/4d07ee63-ad16-4c6c-b8bb-2b956580bef5
+Accept: application/json
+Authorization: Bearer {{access_token}}
 
-### Business Sector
-###
+{
+    "email": "caroline@mail.com",
+    "name": "Caroline Gomes do Nascimento",
+    "role": "AN"
+}
+
+### Delete User
+DELETE localhost:8000/api/v1/iam/user/59703a4d-e067-4fdc-8f87-82600d7764f2
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+### List All Business Sector
 GET http://localhost:8000/api/v1/sector/list
 Accept: application/json
 Authorization: Bearer {{access_token}}
 
-###
+### Get Business Sector
 GET http://localhost:8000/api/v1/sector/5e48dd22-69bd-4db1-9e33-8f02104d20ad
 Accept: application/json
 Authorization: Bearer {{access_token}}
 
-###
+### Create New Business Sector
 POST http://localhost:8000/api/v1/sector
 Accept: application/json
 Authorization: Bearer {{access_token}}
@@ -76,7 +76,7 @@ Authorization: Bearer {{access_token}}
     "sector_name": "Insurance Sector"
 }
 
-###
+### Update Business Sector
 PUT localhost:8000/api/v1/sector/5e48dd22-69bd-4db1-9e33-8f02104d20ad
 Accept: application/json
 Authorization: Bearer {{access_token}}
@@ -85,7 +85,7 @@ Authorization: Bearer {{access_token}}
     "sector_name": "Public Sector"
 }
 
-###
+### Delete Business Sector
 DELETE localhost:8000/api/v1/sector/5e48dd22-69bd-4db1-9e33-8f02104d20ad
 Accept: application/json
 Authorization: Bearer {{access_token}}

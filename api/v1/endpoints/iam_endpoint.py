@@ -13,7 +13,8 @@ router = APIRouter()
 @router.post("/login",
              summary="Login",
              description="Login")
-def login(data: LoginModelReq, response: Response, iam_service: IamService = Depends(IamService)):  # , pub_service: PubService = Depends()
+def login(data: LoginModelReq, response: Response,
+          iam_service: IamService = Depends(IamService)):  # , pub_service: PubService = Depends()
     tokens = iam_service.login_user(data.email, data.password)
     response.set_cookie(
         key="refresh_token",
@@ -31,7 +32,8 @@ def login(data: LoginModelReq, response: Response, iam_service: IamService = Dep
             summary="Refresh Access Token",
             description="Refresh Access Token"
             )
-def refresh_access_token(response: Response, refresh_token: str | None = Cookie(default=None), iam_service: IamService = Depends(IamService)):
+def refresh_access_token(response: Response, refresh_token: str | None = Cookie(default=None),
+                         iam_service: IamService = Depends(IamService)):
     if not refresh_token:
         raise SecurityException("Missing refresh token", 401)
     tokens = iam_service.refresh_access_token(refresh_token)
@@ -72,3 +74,21 @@ def get_user_by_id(user_id: str, iam_service: IamService = Depends(IamService)):
              dependencies=[Depends(check_access_token), Depends(check_admin_role)])
 def create_user(user_data: UserModelReq, iam_service: IamService = Depends(IamService)):
     return iam_service.create_user(user_data)
+
+
+@router.put("/user/{user_id}",
+            response_model=UserModelRes,
+            summary="Update User by ID",
+            description="Update User by ID",
+            dependencies=[Depends(check_access_token), Depends(check_admin_role)])
+def update_user(user_id: str, user_data: UserModelReq, iam_service: IamService = Depends(IamService)):
+    return iam_service.update_user(user_id, user_data)
+
+
+@router.delete("/user/{user_id}",
+               summary="Delete User by ID",
+               description="Delete User by ID",
+               dependencies=[Depends(check_access_token), Depends(check_admin_role)])
+def delete_user(user_id: str, iam_service: IamService = Depends(IamService)):
+    iam_service.delete_user(user_id)
+    return {}

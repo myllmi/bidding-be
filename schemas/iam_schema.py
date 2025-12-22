@@ -14,5 +14,5 @@ class UserModelReq(BaseModel):
     id: str | None = None
     email: str
     name: str
-    password: str
+    password: str | None = None
     role: str

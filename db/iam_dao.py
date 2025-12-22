@@ -48,13 +48,13 @@ class IamDao(Dao):
 
     def get_all_users(self):
         with self.db.cursor(dictionary=True) as cursor_all_users:
-            sql = "SELECT * FROM bidding.user WHERE role != 'AD' ORDER BY name"
+            sql = "SELECT * FROM bidding.user WHERE role != 'AD' AND expired_at is null ORDER BY name"
             cursor_all_users.execute(sql)
             return cursor_all_users.fetchall()
 
     def get_user_by_id(self, user_id):
         with self.db.cursor(dictionary=True) as cursor_user_by_id:
-            sql = "SELECT * FROM bidding.user WHERE id = %s AND role != 'AD'"
+            sql = "SELECT * FROM bidding.user WHERE id = %s AND role != 'AD' AND expired_at is null"
             cursor_user_by_id.execute(sql, (user_id.strip(),))
             return cursor_user_by_id.fetchone()
 
@@ -63,4 +63,18 @@ class IamDao(Dao):
             sql = "INSERT INTO bidding.user (id, name, email, password, role, created_at) VALUES (%s, %s, %s, %s, %s, %s)"
             val = (user_id, user_data.name, user_data.email, user_data.password, user_data.role, datetime.now(timezone.utc))
             cursor_create_user.execute(sql, val)
+            self.db.commit()
+
+    def update_user_by_id(self, user_id, user_data):
+        with self.db.cursor(dictionary=True) as cursor_update_user:
+            sql = "UPDATE bidding.user SET name = %s, email = %s, role = %s WHERE id = %s"
+            val = (user_data.name, user_data.email, user_data.role, user_id)
+            cursor_update_user.execute(sql, val)
+            self.db.commit()
+
+    def delete_user_by_id(self, user_id):
+        with self.db.cursor(dictionary=True) as cursor_delete_user:
+            sql = "UPDATE bidding.user SET expired_at = CURRENT_TIMESTAMP WHERE id = %s"
+            val = (user_id.strip(),)
+            cursor_delete_user.execute(sql, val)
             self.db.commit()
