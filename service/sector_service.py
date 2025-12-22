@@ -46,4 +46,5 @@ class SectorService:
             raise BusinessException("Business Sector not found", 404)
         if dict_sector["expired_at"] is not None:
             raise BusinessException("Invalid Business Sector", 409)
+        # TODO: Check if sector has projects, customers and tenders
         self.db.delete_sector_by_id(sector_id)

@@ -116,9 +116,9 @@ class IamService:
             raise BusinessException("User not found", 404)
         if dict_user["expired_at"] is not None:
             raise BusinessException("Invalid User", 409)
-        # TODO: Check if user has tender assigned to hi
         if dict_user["role"] == "AD":
             raise BusinessException("Admin user can't be deleted!", 409)
+        # TODO: Check if user has tender
         self.db.delete_user_by_id(user_id)
 
     def refresh_user_sector(self, user_id, list_id_sector):
