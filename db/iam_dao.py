@@ -45,3 +45,15 @@ class IamDao(Dao):
             sql = "SELECT l.*, u.role FROM bidding.login l LEFT JOIN bidding.user u ON l.user_id = u.id WHERE l.token = %s"
             cursor_user_by_access_token.execute(sql, (access_token.strip(),))
             return cursor_user_by_access_token.fetchone()
+
+    def get_all_users(self):
+        with self.db.cursor(dictionary=True) as cursor_all_users:
+            sql = "SELECT * FROM bidding.user WHERE role != 'AD' ORDER BY name"
+            cursor_all_users.execute(sql)
+            return cursor_all_users.fetchall()
+
+    def get_user_by_id(self, user_id):
+        with self.db.cursor(dictionary=True) as cursor_user_by_id:
+            sql = "SELECT * FROM bidding.user WHERE id = %s AND role != 'AD'"
+            cursor_user_by_id.execute(sql, (user_id.strip(),))
+            return cursor_user_by_id.fetchone()

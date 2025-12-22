@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Response, Cookie
+from fastapi import APIRouter, Response, Cookie, Depends
 
 from exception.security_exception import SecurityException
+from filter.request_filter import check_access_token
 from schemas.iam_schema import LoginModelReq
 from service.iam_service import IamService
 
@@ -24,10 +25,11 @@ def login(data: LoginModelReq, response: Response):  # , pub_service: PubService
     )
     return {"token": tokens["access_token"]}
 
+
 @router.get("/refresh",
-             summary="Refresh Access Token",
-             description="Refresh Access Token"
-)
+            summary="Refresh Access Token",
+            description="Refresh Access Token"
+            )
 def refresh_access_token(response: Response, refresh_token: str | None = Cookie(default=None)):
     if not refresh_token:
         raise SecurityException("Missing refresh token", 401)
@@ -43,3 +45,19 @@ def refresh_access_token(response: Response, refresh_token: str | None = Cookie(
         path="/"
     )
     return {"token": tokens["access_token"]}
+
+
+@router.get("/user/list",
+            summary="List Users",
+            description="List Users",
+            dependencies=[Depends(check_access_token)])
+def list_users(iam_service: IamService = Depends(IamService)):
+    return iam_service.get_all_users()
+
+
+@router.get("/user/{user_id}",
+            summary="Get Users by ID",
+            description="Get Users by ID",
+            dependencies=[Depends(check_access_token)])
+def list_users(user_id: str, iam_service: IamService = Depends(IamService)):
+    return iam_service.get_user_by_id(user_id)

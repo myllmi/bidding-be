@@ -1,3 +1,4 @@
+### IAM
 ###
 POST http://localhost:8000/api/v1/iam/login
 Accept: application/json
@@ -19,6 +20,20 @@ Accept: application/json
     client.global.set("access_token", response.body.token);
 %}
 
+###
+GET http://localhost:8000/api/v1/iam/user/list
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+###
+GET http://localhost:8000/api/v1/iam/user/fd7fcb70-f7f7-4ccd-bf5a-117699666601
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+
+
+
+### Business Sector
 ###
 GET http://localhost:8000/api/v1/sector/list
 Accept: application/json

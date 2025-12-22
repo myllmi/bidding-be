@@ -2,6 +2,7 @@ from datetime import datetime, timezone, date, time, timedelta
 from decimal import Decimal
 
 from db.iam_dao import IamDao
+from exception.business_exception import BusinessException
 from exception.security_exception import SecurityException
 from util.helper import gen_hash_512
 
@@ -66,3 +67,17 @@ class IamService:
         check_token(dict_user)
         if dict_user['role'] != role:
             raise SecurityException("Permission denied", 403)
+
+    def get_all_users(self):
+        return self.db.get_all_users()
+
+    def get_user_by_id(self, user_id):
+        dict_user = self.db.get_user_by_id(user_id)
+        if dict_user is None:
+            raise BusinessException("User not found", 404)
+        return {
+            "name": dict_user['name'],
+            "email": dict_user['email'],
+            "role": dict_user['role']
+        }
+
