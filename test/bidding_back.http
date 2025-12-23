@@ -91,3 +91,15 @@ Authorization: Bearer {{access_token}}
 DELETE localhost:8000/api/v1/sector/5e48dd22-69bd-4db1-9e33-8f02104d20ad
 Accept: application/json
 Authorization: Bearer {{access_token}}
+
+### Upload a Project File
+POST http://localhost:8000/api/v1/project/upload
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer {{access_token}}
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="proj_upload.xlsx"
+Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+
+< ./proj_upload.xlsx
+--boundary--
