@@ -1,4 +1,3 @@
-from fastapi import Depends
 from openpyxl import load_workbook
 
 from db.project_dao import ProjectDao
@@ -11,7 +10,6 @@ class ProjectService:
         self.queue_service = QueueService()
 
     def insert_project(self, project_file):
-        print(project_file)
         wb = load_workbook(project_file)
         sheet = wb["Sheet1"]
         for row in sheet.iter_rows(values_only=True, min_row=2):

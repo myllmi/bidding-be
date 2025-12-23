@@ -13,9 +13,9 @@ router = APIRouter()
              description="Upload List of Projects (XLS)",
              dependencies=[Depends(check_access_token), Depends(check_admin_role)],)
 def upload_file_project(file: UploadFile = File(...), project_service: ProjectService = Depends(ProjectService)):
-    upload_dir = FsPath("in")
+    upload_dir = FsPath("/in/project")
     file_path = upload_dir / file.filename
     with file_path.open("wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
-    project_service.insert_project(file_path)
+    #project_service.insert_project(file_path)
     return {}

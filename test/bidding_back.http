@@ -103,3 +103,15 @@ Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 
 < ./proj_upload_two.xlsx
 --boundary--
+
+### Upload a Resume File
+POST http://localhost:8000/api/v1/resume/upload
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer {{access_token}}
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="Jorge-CV.pdf"
+Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+
+< ./Jorge-CV.pdf
+--boundary--
