@@ -69,15 +69,6 @@ class IamService:
         if dict_user['role'] != role:
             raise SecurityException("Permission denied", 403)
 
-    def get_all_users(self):
-        return self.db.get_all_users()
-
-    def get_user_by_id(self, user_id):
-        dict_user = self.db.get_user_by_id(user_id)
-        if dict_user is None:
-            raise BusinessException("User not found", 404)
-        return dict_user
-
     def create_user(self, user_data):
         list_user = self.db.get_user_by_email(user_data.email)
         if list_user is not None:
@@ -130,4 +121,16 @@ class IamService:
         dict_user = self.db.get_user_by_access_token(token)
         if dict_user is None:
             raise SecurityException("Invalid credentials", 401)
+        return dict_user
+
+    def get_all_users_by_role(self, bearer_token):
+        return []
+
+    def get_current_user(self, bearer_token):
+        return {}
+
+    def get_user_by_id(self, user_id, bearer_token):
+        dict_user = self.db.get_user_by_id(user_id)
+        if dict_user is None:
+            raise BusinessException("User not found", 404)
         return dict_user

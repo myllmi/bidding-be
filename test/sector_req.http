@@ -1,0 +1,53 @@
+### Generate Access Token
+POST http://localhost:8000/api/v1/iam/login
+Accept: application/json
+
+{
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
+
+> {%
+    client.global.set("access_token", response.body.token);
+%}
+
+### Refresh Access Token
+GET http://localhost:8000/api/v1/iam/refresh
+Accept: application/json
+
+> {%
+    client.global.set("access_token", response.body.token);
+%}
+
+### List All Business Sector
+GET http://localhost:8000/api/v1/sector/list
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+### Get Business Sector
+GET http://localhost:8000/api/v1/sector/5e48dd22-69bd-4db1-9e33-8f02104d20ad
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+### Create New Business Sector
+POST http://localhost:8000/api/v1/sector
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+{
+    "sector_name": "Insurance Sector"
+}
+
+### Update Business Sector
+PUT localhost:8000/api/v1/sector/5e48dd22-69bd-4db1-9e33-8f02104d20ad
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+{
+    "sector_name": "Public Sector"
+}
+
+### Delete Business Sector
+DELETE localhost:8000/api/v1/sector/5e48dd22-69bd-4db1-9e33-8f02104d20ad
+Accept: application/json
+Authorization: Bearer {{access_token}}

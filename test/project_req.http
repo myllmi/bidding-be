@@ -1,0 +1,31 @@
+### Generate Access Token
+POST http://localhost:8000/api/v1/iam/login
+Accept: application/json
+
+{
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
+
+> {%
+    client.global.set("access_token", response.body.token);
+%}
+
+### Refresh Access Token
+GET http://localhost:8000/api/v1/iam/refresh
+Accept: application/json
+
+> {%
+    client.global.set("access_token", response.body.token);
+%}
+### Upload a Project File
+POST http://localhost:8000/api/v1/project/upload
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer {{access_token}}
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="proj_upload_two.xlsx"
+Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+
+< ./proj_upload_two.xlsx
+--boundary--

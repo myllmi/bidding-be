@@ -6,6 +6,7 @@ from exception.security_exception import SecurityException
 from filter.request_filter import check_access_token, check_admin_role
 from schemas.iam_schema import LoginModelReq, UserModelRes, UserModelReq
 from service.iam_service import IamService
+from util.helper import get_current_token
 
 router = APIRouter()
 
@@ -51,11 +52,20 @@ def refresh_access_token(response: Response, refresh_token: str | None = Cookie(
 
 @router.get("/user/list",
             response_model=List[UserModelRes],
-            summary="List Users",
-            description="List Users",
+            summary="List Users by Role",
+            description="List Users by Role",
             dependencies=[Depends(check_access_token)])
-def list_users(iam_service: IamService = Depends(IamService)):
-    return iam_service.get_all_users()
+def list_users_by_role(bearer_token: str = Depends(get_current_token), iam_service: IamService = Depends(IamService)):
+    return iam_service.get_all_users_by_role(bearer_token)
+
+
+@router.get("/user",
+            response_model=UserModelRes,
+            summary="Get Users by ID",
+            description="Get Users by ID",
+            dependencies=[Depends(check_access_token)])
+def get_current_user(bearer_token: str = Depends(get_current_token), iam_service: IamService = Depends(IamService)):
+    return iam_service.get_current_user(bearer_token)
 
 
 @router.get("/user/{user_id}",
@@ -63,8 +73,9 @@ def list_users(iam_service: IamService = Depends(IamService)):
             summary="Get Users by ID",
             description="Get Users by ID",
             dependencies=[Depends(check_access_token)])
-def get_user_by_id(user_id: str, iam_service: IamService = Depends(IamService)):
-    return iam_service.get_user_by_id(user_id)
+def get_user_by_id(user_id: str, bearer_token: str = Depends(get_current_token),
+                   iam_service: IamService = Depends(IamService)):
+    return iam_service.get_user_by_id(user_id, bearer_token)
 
 
 @router.post("/user",

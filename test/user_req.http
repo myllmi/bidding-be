@@ -1,0 +1,65 @@
+### Generate Access Token
+POST http://localhost:8000/api/v1/iam/login
+Accept: application/json
+
+{
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
+
+> {%
+    client.global.set("access_token", response.body.token);
+%}
+
+### Refresh Access Token
+GET http://localhost:8000/api/v1/iam/refresh
+Accept: application/json
+
+> {%
+    client.global.set("access_token", response.body.token);
+%}
+
+### List All Users
+GET http://localhost:8000/api/v1/iam/user/list
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+### Get User by ID
+GET http://localhost:8000/api/v1/iam/user/59703a4d-e067-4fdc-8f87-82600d7764f2
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+### Get Current User
+GET http://localhost:8000/api/v1/iam/user
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+### Create New User
+POST localhost:8000/api/v1/iam/user
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+{
+    "email": "caroline@mail.com",
+    "name": "Caroline Nascimento",
+    "password": "123ABC#",
+    "role": "AN",
+    "listIdSector": ["5e48dd22-69bd-4db1-9e33-8f02104d20ad", "99fb6b9a-1485-4fd3-94f7-e1680103867f", "c969a4e8-994e-4214-8218-9a40f1773361"]
+}
+
+### Update User
+PUT localhost:8000/api/v1/iam/user/00351a51-ac4c-4c83-9e15-edf0beb64e38
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+{
+    "email": "caroline@mail.com",
+    "name": "Caroline Gomes do Nascimento",
+    "role": "AN",
+    "listIdSector": ["5e48dd22-69bd-4db1-9e33-8f02104d20ad", "99fb6b9a-1485-4fd3-94f7-e1680103867f", "c969a4e8-994e-4214-8218-9a40f1773361"]
+}
+
+### Delete User
+DELETE localhost:8000/api/v1/iam/user/59703a4d-e067-4fdc-8f87-82600d7764f2
+Accept: application/json
+Authorization: Bearer {{access_token}}

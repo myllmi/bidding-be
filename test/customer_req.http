@@ -1,0 +1,24 @@
+### Generate Access Token
+POST http://localhost:8000/api/v1/iam/login
+Accept: application/json
+
+{
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
+
+> {%
+    client.global.set("access_token", response.body.token);
+%}
+
+### Refresh Access Token
+GET http://localhost:8000/api/v1/iam/refresh
+Accept: application/json
+
+> {%
+    client.global.set("access_token", response.body.token);
+%}
+### List all customers
+GET localhost:8000/api/v1/customer/list
+Accept: application/json
+Authorization: Bearer {{access_token}}
