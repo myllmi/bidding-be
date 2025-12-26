@@ -48,3 +48,6 @@ class SectorService:
             raise BusinessException("Invalid Business Sector", 409)
         # TODO: Check if sector has customers and tenders
         self.db.delete_sector_by_id(sector_id)
+
+    def get_sector_by_user_id(self, user_id):
+        return self.db.get_sector_by_user_id(user_id)

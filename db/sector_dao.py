@@ -39,3 +39,9 @@ class SectorDao(Dao):
             sql = "INSERT INTO bidding.business_sector (id, sector_name, created_at) VALUES (%s, %s, %s)"
             cursor_create_sector.execute(sql, (sector_id, sector.sector_name, datetime.now(timezone.utc)))
             self.db.commit()
+
+    def get_sector_by_user_id(self, user_id):
+        with self.db.cursor(dictionary=True) as cursor_sector_by_user_id:
+            sql = "SELECT * FROM bidding.user_business_sector ubs LEFT JOIN bidding.business_sector bs ON ubs.business_sector_id = bs.id WHERE user_id = %s AND bs.expired_at is null"
+            cursor_sector_by_user_id.execute(sql, (user_id,))
+            return cursor_sector_by_user_id.fetchall()

@@ -42,7 +42,7 @@ class IamDao(Dao):
 
     def get_user_by_access_token(self, access_token):
         with self.db.cursor(dictionary=True) as cursor_user_by_access_token:
-            sql = "SELECT l.*, u.role FROM bidding.login l LEFT JOIN bidding.user u ON l.user_id = u.id WHERE l.token = %s"
+            sql = "SELECT * FROM bidding.login l LEFT JOIN bidding.user u ON l.user_id = u.id WHERE l.token = %s"
             cursor_user_by_access_token.execute(sql, (access_token.strip(),))
             return cursor_user_by_access_token.fetchone()
 

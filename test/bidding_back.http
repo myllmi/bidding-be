@@ -115,3 +115,8 @@ Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 
 < ./Jorge-CV.pdf
 --boundary--
+
+### List all customers by endpoint
+GET localhost:8000/api/v1/customer/list
+Accept: application/json
+Authorization: Bearer {{access_token}}

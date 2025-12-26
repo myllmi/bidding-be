@@ -125,3 +125,9 @@ class IamService:
         self.db.delete_user_sector(user_id)
         for id_sector in list_id_sector:
             self.db.add_user_sector(user_id, id_sector)
+
+    def get_user_by_bearer_token(self, token):
+        dict_user = self.db.get_user_by_access_token(token)
+        if dict_user is None:
+            raise SecurityException("Invalid credentials", 401)
+        return dict_user
