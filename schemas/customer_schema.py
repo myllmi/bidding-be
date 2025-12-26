@@ -4,15 +4,15 @@ from schemas.camel_schema import CamelModelBase
 
 
 class CustomerModelRes(CamelModelBase):
-    id: str
+    id: str | None
     customer_name: str
-    vat_number: str
-    phone_number: str
-    contact_name: str
-    address: str
-    city: str
-    district: str
-    country: str
-    confirmed_at: datetime
+    vat_number: str | None
+    phone_number: str | None
+    contact_name: str | None
+    address: str | None
+    city: str | None
+    district: str | None
+    country: str | None
+    confirmed_at: datetime | None
     created_at: datetime
-    expired_at: datetime
+    expired_at: datetime | None

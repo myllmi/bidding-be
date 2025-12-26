@@ -9,6 +9,6 @@ class CustomerDao(Dao):
         else:
             placeholders = ", ".join(["%s"] * len(list_sector))
             sql = f"SELECT * FROM customer WHERE business_sector_id IN ({placeholders})"
-        with self.db.cursor() as cursor_customer_by_sector:
+        with self.db.cursor(dictionary=True) as cursor_customer_by_sector:
             cursor_customer_by_sector.execute(sql, list_sector)
             return cursor_customer_by_sector.fetchall()

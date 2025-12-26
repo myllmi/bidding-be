@@ -16,5 +16,4 @@ router = APIRouter()
             description="List all customers by user",
             dependencies=[Depends(check_access_token)])
 def list_customers_by_token(bearer_token: str = Depends(get_current_token), customer_service: CustomerService = Depends(CustomerService)):
-    print(customer_service.list_customer_by_token(bearer_token))
-    return []
+    return customer_service.list_customer_by_token(bearer_token)
