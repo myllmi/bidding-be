@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends
 from filter.request_filter import check_admin_role, check_access_token
 from schemas.sector_schema import SectorModelRes, SectorModelReq
 from service.sector_service import SectorService
+from util.helper import get_current_token
 
 router = APIRouter()
 
@@ -14,8 +15,8 @@ router = APIRouter()
             summary="List all business sectors",
             description="List all business sectors",
             dependencies=[Depends(check_access_token)])
-def list_business_sectors(sector_service: SectorService = Depends(SectorService)):
-    return sector_service.get_all_sectors()
+def list_business_sectors(bearer_token: str = Depends(get_current_token), sector_service: SectorService = Depends(SectorService)):
+    return sector_service.list_sector(bearer_token)
 
 
 @router.get("/{sector_id}",
