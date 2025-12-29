@@ -25,12 +25,12 @@ Accept: application/json
 Authorization: Bearer {{access_token}}
 
 ### Get User by ID
-GET http://localhost:8000/api/v1/user/59703a4d-e067-4fdc-8f87-82600d7764f2
+GET http://localhost:8000/api/v1/user/get/59703a4d-e067-4fdc-8f87-82600d7764f2
 Accept: application/json
 Authorization: Bearer {{access_token}}
 
 ### Get Current User
-GET http://localhost:8000/api/v1/user
+GET http://localhost:8000/api/v1/user/current
 Accept: application/json
 Authorization: Bearer {{access_token}}
 

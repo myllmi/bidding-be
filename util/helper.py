@@ -18,7 +18,7 @@ def get_current_token(credentials: HTTPAuthorizationCredentials = Depends(securi
     return credentials.credentials
 
 
-def check_same_sector(self, list_first, list_second):
+def check_same_sector(list_first, list_second):
     ids_first = {item['id'] for item in list_first}
     ids_second = {item['id'] for item in list_second}
     return bool(ids_first & ids_second)

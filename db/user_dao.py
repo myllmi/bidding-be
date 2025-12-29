@@ -64,3 +64,14 @@ class UserDao(Dao):
             val = (str(uuid.uuid4()), user_id.strip(), id_sector.strip())
             cursor_add_user_sector.execute(sql, val)
             self.db.commit()
+
+    def get_user_by_sector(self, list_sector):
+        if not list_sector:
+            # Prevent invalid SQL: IN ()
+            sql = "SELECT * FROM bidding.user WHERE 1 = 0"
+        else:
+            placeholders = ", ".join(["%s"] * len(list_sector))
+            sql = f"SELECT DISTINCT u.* FROM bidding.user u LEFT JOIN bidding.user_business_sector ubs ON u.id = ubs.user_id WHERE u.expired_at IS NULL AND ubs.business_sector_id IN ({placeholders})"
+        with self.db.cursor(dictionary=True) as cursor_user_by_sector:
+            cursor_user_by_sector.execute(sql, list_sector)
+            return cursor_user_by_sector.fetchall()

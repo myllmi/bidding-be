@@ -65,11 +65,18 @@ class UserService:
             raise SecurityException("Invalid credentials", 401)
         return dict_user
 
-    def get_all_users_by_role(self, bearer_token):
-        return []
+    def get_all_users_by_role(self, dict_token, list_sector):
+        if dict_token['role'] == ROLE_ADMIN:
+            return self.db.get_all_users()
+        else:
+            ids_sector = [item['id'] for item in list_sector]
+            return self.db.get_user_by_sector(ids_sector)
 
     def get_current_user(self, bearer_token):
-        return {}
+        dict_token = self.db.get_user_by_access_token(bearer_token)
+        if dict_token is None:
+            raise SecurityException("Invalid credentials", 401)
+        return dict_token
 
     def get_user_by_email(self, email):
         dict_user = self.db.get_user_by_email(email)
@@ -77,13 +84,10 @@ class UserService:
             raise BusinessException("User not found", 404)
         return dict_user
 
-    def get_user_by_id(self, user_id, bearer_token):
-        dict_token = self.db.get_user_by_access_token(bearer_token)
-        if dict_token is None:
-            raise SecurityException("Invalid credentials", 401)
+    def get_user_by_id(self, user_id, role, first_list, second_list):
         dict_user = self.db.get_user_by_id(user_id)
-        if dict_token['role'] != ROLE_ADMIN:
-            if not check_same_sector(dict_token['user_id'], dict_user['id']):
+        if role != ROLE_ADMIN:
+            if not check_same_sector(first_list, second_list):
                 dict_user = None
         if dict_user is None:
             raise BusinessException("User not found", 404)
