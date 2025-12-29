@@ -1,12 +1,9 @@
-from typing import List
-
 from fastapi import APIRouter, Response, Cookie, Depends
 
 from exception.security_exception import SecurityException
-from filter.request_filter import check_access_token, check_admin_role
-from schemas.iam_schema import LoginModelReq, UserModelRes, UserModelReq
+from schemas.iam_schema import LoginModelReq
 from service.iam_service import IamService
-from util.helper import get_current_token
+from service.user_service import UserService
 
 router = APIRouter()
 
@@ -14,9 +11,10 @@ router = APIRouter()
 @router.post("/login",
              summary="Login",
              description="Login")
-def login(data: LoginModelReq, response: Response,
-          iam_service: IamService = Depends(IamService)):  # , pub_service: PubService = Depends()
-    tokens = iam_service.login_user(data.email, data.password)
+def login(data: LoginModelReq, response: Response, iam_service: IamService = Depends(IamService), user_service: UserService = Depends(UserService)):
+    dict_user = user_service.get_user_by_email(data.email)
+    print(dict_user)
+    tokens = iam_service.login_user(data.email, data.password, dict_user)
     response.set_cookie(
         key="refresh_token",
         value=tokens["refresh_token"],
@@ -48,58 +46,3 @@ def refresh_access_token(response: Response, refresh_token: str | None = Cookie(
         path="/"
     )
     return {"token": tokens["access_token"]}
-
-
-@router.get("/user/list",
-            response_model=List[UserModelRes],
-            summary="List Users by Role",
-            description="List Users by Role",
-            dependencies=[Depends(check_access_token)])
-def list_users_by_role(bearer_token: str = Depends(get_current_token), iam_service: IamService = Depends(IamService)):
-    return iam_service.get_all_users_by_role(bearer_token)
-
-
-@router.get("/user",
-            response_model=UserModelRes,
-            summary="Get Users by ID",
-            description="Get Users by ID",
-            dependencies=[Depends(check_access_token)])
-def get_current_user(bearer_token: str = Depends(get_current_token), iam_service: IamService = Depends(IamService)):
-    return iam_service.get_current_user(bearer_token)
-
-
-@router.get("/user/{user_id}",
-            response_model=UserModelRes,
-            summary="Get Users by ID",
-            description="Get Users by ID",
-            dependencies=[Depends(check_access_token)])
-def get_user_by_id(user_id: str, bearer_token: str = Depends(get_current_token),
-                   iam_service: IamService = Depends(IamService)):
-    return iam_service.get_user_by_id(user_id, bearer_token)
-
-
-@router.post("/user",
-             response_model=UserModelRes,
-             summary="Create User",
-             description="Create User",
-             dependencies=[Depends(check_access_token), Depends(check_admin_role)])
-def create_user(user_data: UserModelReq, iam_service: IamService = Depends(IamService)):
-    return iam_service.create_user(user_data)
-
-
-@router.put("/user/{user_id}",
-            response_model=UserModelRes,
-            summary="Update User by ID",
-            description="Update User by ID",
-            dependencies=[Depends(check_access_token), Depends(check_admin_role)])
-def update_user(user_id: str, user_data: UserModelReq, iam_service: IamService = Depends(IamService)):
-    return iam_service.update_user(user_id, user_data)
-
-
-@router.delete("/user/{user_id}",
-               summary="Delete User by ID",
-               description="Delete User by ID",
-               dependencies=[Depends(check_access_token), Depends(check_admin_role)])
-def delete_user(user_id: str, iam_service: IamService = Depends(IamService)):
-    iam_service.delete_user(user_id)
-    return {}

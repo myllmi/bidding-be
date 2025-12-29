@@ -17,5 +17,5 @@ def upload_file_project(file: UploadFile = File(...), project_service: ProjectSe
     file_path = upload_dir / file.filename
     with file_path.open("wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
-    #project_service.insert_project(file_path)
+    project_service.insert_project(file_path)
     return {}

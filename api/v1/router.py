@@ -1,10 +1,12 @@
 from fastapi import APIRouter
 
-from api.v1.endpoints import iam_endpoint, sector_endpoint, project_endpoint, resume_endpoint, customer_endpoint
+from api.v1.endpoints import iam_endpoint, sector_endpoint, project_endpoint, resume_endpoint, customer_endpoint, \
+    user_endpoint
 
 api_router = APIRouter()
 
 api_router.include_router(iam_endpoint.router, prefix="/iam")
+api_router.include_router(user_endpoint.router, prefix="/user")
 api_router.include_router(sector_endpoint.router, prefix="/sector")
 api_router.include_router(project_endpoint.router, prefix="/project")
 api_router.include_router(resume_endpoint.router, prefix="/resume")

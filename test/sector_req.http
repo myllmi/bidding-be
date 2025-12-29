@@ -35,7 +35,7 @@ Accept: application/json
 Authorization: Bearer {{access_token}}
 
 {
-    "sector_name": "Insurance Sector"
+    "sector_name": "Public Sector"
 }
 
 ### Update Business Sector

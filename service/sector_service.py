@@ -3,16 +3,15 @@ import uuid
 from db.sector_dao import SectorDao
 from exception.business_exception import BusinessException
 from service.iam_service import IamService
+from util.constant import ROLE_ADMIN
 
 
 class SectorService:
     def __init__(self):
         self.db = SectorDao()
-        self.iam_service = IamService()
 
-    def list_sector(self, bearer_token: str):
-        dict_user = self.iam_service.get_user_by_bearer_token(bearer_token)
-        if dict_user['role'] != 'AD':
+    def list_sector(self, dict_user):
+        if dict_user['role'] != ROLE_ADMIN:
             list_sector = self.get_sector_by_user_id(dict_user['id'])
             return list_sector
         else:

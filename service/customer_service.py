@@ -1,18 +1,13 @@
 from db.customer_dao import CustomerDao
-from service.iam_service import IamService
-from service.sector_service import SectorService
+from util.constant import ROLE_ADMIN
 
 
 class CustomerService:
     def __init__(self):
         self.db = CustomerDao()
-        self.iam_service = IamService()
-        self.sector_service = SectorService()
 
-    def list_customer(self, bearer_token: str):
-        dict_user = self.iam_service.get_user_by_bearer_token(bearer_token)
-        if dict_user['role'] != 'AD':
-            list_sector = self.sector_service.get_sector_by_user_id(dict_user['id'])
+    def list_customer(self, dict_user, list_sector):
+        if dict_user['role'] != ROLE_ADMIN:
             arr_sector = [item['business_sector_id'] for item in list_sector]
             return self.db.get_customer_by_sector(arr_sector)
         else:

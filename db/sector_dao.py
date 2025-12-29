@@ -12,7 +12,7 @@ class SectorDao(Dao):
 
     def get_sector_by_id(self, sector_id):
         with self.db.cursor(dictionary=True) as cursor_sector_by_id:
-            sql = "SELECT * FROM bidding.business_sector WHERE id = %s"
+            sql = "SELECT * FROM bidding.business_sector WHERE id = %s AND expired_at is null"
             cursor_sector_by_id.execute(sql, (sector_id,))
             return cursor_sector_by_id.fetchone()
 
@@ -30,7 +30,7 @@ class SectorDao(Dao):
 
     def get_sector_by_name(self, sector_name):
         with self.db.cursor(dictionary=True) as cursor_sector_by_name:
-            sql = "SELECT * FROM bidding.business_sector WHERE sector_name = %s"
+            sql = "SELECT * FROM bidding.business_sector WHERE sector_name = %s AND expired_at is null"
             cursor_sector_by_name.execute(sql, (sector_name,))
             return cursor_sector_by_name.fetchall()
 

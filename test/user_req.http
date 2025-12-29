@@ -20,22 +20,22 @@ Accept: application/json
 %}
 
 ### List All Users
-GET http://localhost:8000/api/v1/iam/user/list
+GET http://localhost:8000/api/v1/user/list
 Accept: application/json
 Authorization: Bearer {{access_token}}
 
 ### Get User by ID
-GET http://localhost:8000/api/v1/iam/user/59703a4d-e067-4fdc-8f87-82600d7764f2
+GET http://localhost:8000/api/v1/user/59703a4d-e067-4fdc-8f87-82600d7764f2
 Accept: application/json
 Authorization: Bearer {{access_token}}
 
 ### Get Current User
-GET http://localhost:8000/api/v1/iam/user
+GET http://localhost:8000/api/v1/user
 Accept: application/json
 Authorization: Bearer {{access_token}}
 
 ### Create New User
-POST localhost:8000/api/v1/iam/user
+POST localhost:8000/api/v1/user
 Accept: application/json
 Authorization: Bearer {{access_token}}
 
@@ -48,7 +48,7 @@ Authorization: Bearer {{access_token}}
 }
 
 ### Update User
-PUT localhost:8000/api/v1/iam/user/00351a51-ac4c-4c83-9e15-edf0beb64e38
+PUT localhost:8000/api/v1/user/00351a51-ac4c-4c83-9e15-edf0beb64e38
 Accept: application/json
 Authorization: Bearer {{access_token}}
 
@@ -60,6 +60,6 @@ Authorization: Bearer {{access_token}}
 }
 
 ### Delete User
-DELETE localhost:8000/api/v1/iam/user/59703a4d-e067-4fdc-8f87-82600d7764f2
+DELETE localhost:8000/api/v1/user/59703a4d-e067-4fdc-8f87-82600d7764f2
 Accept: application/json
 Authorization: Bearer {{access_token}}
