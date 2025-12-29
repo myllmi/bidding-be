@@ -3,14 +3,8 @@ import uuid
 from db.user_dao import UserDao
 from exception.business_exception import BusinessException
 from exception.security_exception import SecurityException
-from service.iam_service import check_token
-from util.helper import gen_hash_512
-
-
-def check_same_sector(self, list_first, list_second):
-    ids_first = {item['id'] for item in list_first}
-    ids_second = {item['id'] for item in list_second}
-    return bool(ids_first & ids_second)
+from util.constant import ROLE_ADMIN
+from util.helper import gen_hash_512, check_same_sector, check_token
 
 
 class UserService:
@@ -88,7 +82,7 @@ class UserService:
         if dict_token is None:
             raise SecurityException("Invalid credentials", 401)
         dict_user = self.db.get_user_by_id(user_id)
-        if dict_token['role'] != self.ROLE_ADMIN:
+        if dict_token['role'] != ROLE_ADMIN:
             if not check_same_sector(dict_token['user_id'], dict_user['id']):
                 dict_user = None
         if dict_user is None:

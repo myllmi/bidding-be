@@ -2,19 +2,7 @@ from datetime import datetime, timezone
 
 from db.iam_dao import IamDao
 from exception.security_exception import SecurityException
-from util.helper import gen_hash_512
-
-
-def check_token(dict_login):
-    if dict_login is None:
-        raise SecurityException("Invalid access token", 401)
-    if dict_login['expired_at'] is not None:
-        raise SecurityException("Invalid token", 401)
-    expires_at = dict_login['token_valid_until']
-    if expires_at.tzinfo is None:
-        expires_at = expires_at.replace(tzinfo=timezone.utc)
-    if datetime.now(timezone.utc) > expires_at:
-        raise SecurityException("Token expired", 401)
+from util.helper import gen_hash_512, check_token
 
 
 class IamService:
