@@ -6,7 +6,6 @@ from service.queue_service import QueueService
 
 class ResumeService:
     def __init__(self):
-        pass
         self.db = ResumeDao()
         self.queue_service = QueueService()
 

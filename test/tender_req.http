@@ -1,0 +1,38 @@
+### Generate Access Token
+POST http://localhost:8000/api/v1/iam/login
+Accept: application/json
+
+{
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
+
+> {%
+    client.global.set("access_token", response.body.token);
+%}
+
+### Refresh Access Token
+GET http://localhost:8000/api/v1/iam/refresh
+Accept: application/json
+
+> {%
+    client.global.set("access_token", response.body.token);
+%}
+### Upload a Tender File
+POST http://localhost:8000/api/v1/tender/upload
+Authorization: Bearer {{access_token}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="files"; filename="pp.pdf"
+Content-Type: application/pdf
+
+< ./pp.pdf
+
+--boundary
+Content-Disposition: form-data; name="files"; filename="pp.pdf"
+Content-Type: application/pdf
+
+< ./pp.pdf
+
+--boundary--
