@@ -16,9 +16,11 @@ router = APIRouter()
              dependencies=[Depends(check_access_token)])
 def upload_files_tender(files: List[UploadFile] = File(...), tender_service: TenderService = Depends(TenderService)):
     upload_dir = FsPath("/in/tender")
+    arr_file = []
     for file in files:
         file_path = upload_dir / file.filename
         with file_path.open("wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
-            tender_service.insert_tender(file_path)
+            arr_file.append(str(file_path))
+    tender_service.insert_tender(arr_file)
     return {}

@@ -15,3 +15,11 @@ class TenderDao(Dao):
             cursor_insert_resume.execute(sql, val)
             self.db.commit()
         return tender_id
+
+    def insert_tender_file(self, tender_id, file_name):
+        with self.db.cursor(dictionary=True) as cursor_insert_tender_file:
+            sql = "INSERT INTO bidding.tender_document (id, file_path_document, tender_id) VALUES (%s, %s, %s)"
+            val = (str(uuid.uuid4()), file_name, tender_id)
+            cursor_insert_tender_file.execute(sql, val)
+            self.db.commit()
+
