@@ -36,3 +36,8 @@ Content-Type: application/pdf
 < ./pp.pdf
 
 --boundary--
+
+### Evaluate Tender
+POST http://localhost:8000/api/v1/tender/evaluate/f17afd76-da1d-4b1f-876b-22af442fba3f
+Authorization: Bearer {{access_token}}
+Accept: application/json
