@@ -24,7 +24,7 @@ Content-Type: multipart/form-data; boundary=boundary
 Authorization: Bearer {{access_token}}
 
 --boundary
-Content-Disposition: form-data; name="file"; filename="Jorge-CV.pdf"
+Content-Disposition: form-data; name="files"; filename="Jorge-CV.pdf"
 Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 
 < ./Jorge-CV.pdf

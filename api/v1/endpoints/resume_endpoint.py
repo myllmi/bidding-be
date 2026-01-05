@@ -1,5 +1,6 @@
 import shutil
 from pathlib import Path as FsPath
+from typing import List
 
 from fastapi import APIRouter, Depends, UploadFile, File
 
@@ -13,10 +14,13 @@ router = APIRouter()
              summary="Upload Resume File",
              description="Upload Resume File",
              dependencies=[Depends(check_access_token)])
-def upload_file_resume(file: UploadFile = File(...), resume_service: ResumeService = Depends(ResumeService)):
+def upload_file_resume(files: List[UploadFile] = File(...), resume_service: ResumeService = Depends(ResumeService)):
     upload_dir = FsPath("/in/resume")
-    file_path = upload_dir / file.filename
-    with file_path.open("wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    resume_service.insert_resume(file_path)
+    arr_file = []
+    for file in files:
+        file_path = upload_dir / file.filename
+        with file_path.open("wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+            arr_file.append(str(file_path))
+    resume_service.insert_resume(arr_file)
     return {}

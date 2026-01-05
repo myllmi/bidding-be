@@ -7,7 +7,8 @@ class ResumeService:
         self.db = ResumeDao()
         self.queue_service = QueueService()
 
-    def insert_resume(self, resume_file):
-        resume_id = self.db.insert_resume(resume_file)
-        self.queue_service.publish_event("resume.load", {"resume_id": resume_id})
+    def insert_resume(self, arr_file):
+        for resume_file in arr_file:
+            resume_id = self.db.insert_resume(resume_file)
+            self.queue_service.publish_event("resume.load", {"resume_id": resume_id})
         self.queue_service.close_connection()
