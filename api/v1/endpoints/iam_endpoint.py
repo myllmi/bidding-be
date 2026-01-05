@@ -13,7 +13,6 @@ router = APIRouter()
              description="Login")
 def login(data: LoginModelReq, response: Response, iam_service: IamService = Depends(IamService), user_service: UserService = Depends(UserService)):
     dict_user = user_service.get_user_by_email(data.email)
-    print(dict_user)
     tokens = iam_service.login_user(data.email, data.password, dict_user)
     response.set_cookie(
         key="refresh_token",

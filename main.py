@@ -1,5 +1,6 @@
 from fastapi import Request, FastAPI
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 from api.v1.router import api_router
 from exception.business_exception import BusinessException
@@ -9,6 +10,17 @@ app = FastAPI(
     title="Bidding AI API",
     description="API for Bidding AI",
     version="0.1.0b",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:4200",  # Angular dev
+        # "https://yourdomain.com"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],        # includes OPTIONS
+    allow_headers=["*"],        # includes Authorization
 )
 
 
