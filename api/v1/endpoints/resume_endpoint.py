@@ -24,3 +24,10 @@ def upload_file_resume(files: List[UploadFile] = File(...), resume_service: Resu
             arr_file.append(str(file_path))
     resume_service.insert_resume(arr_file)
     return {}
+
+@router.get("/list",
+            summary="List Resume Files",
+             description="List Resume Files",
+            dependencies=[Depends(check_access_token)])
+def list_resume_files(resume_service: ResumeService = Depends(ResumeService)):
+    return resume_service.list_resume()

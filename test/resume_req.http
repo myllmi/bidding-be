@@ -29,3 +29,8 @@ Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 
 < ./Jorge-CV.pdf
 --boundary--
+
+### List all resume
+GET http://localhost:8000/api/v1/resume/list
+Content-Type: application/json
+Authorization: Bearer {{access_token}}

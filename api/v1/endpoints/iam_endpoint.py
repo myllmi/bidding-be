@@ -18,15 +18,16 @@ def login(data: LoginModelReq, response: Response, iam_service: IamService = Dep
         key="refresh_token",
         value=tokens["refresh_token"],
         httponly=True,
+        secure=False,  # MUST be False on http://localhost
         # secure=True,  # required in production (HTTPS)
-        samesite="lax",  # or "strict" / "none"
+        samesite="lax",
         max_age=30 * 24 * 60 * 60,  # 14 days (seconds)
         path="/"
     )
     return {"token": tokens["access_token"]}
 
 
-@router.get("/refresh",
+@router.post("/refresh",
             summary="Refresh Access Token",
             description="Refresh Access Token"
             )
