@@ -14,3 +14,9 @@ class ProjectDao(Dao):
             cursor_insert_project.execute(sql, val)
             self.db.commit()
         return project_id
+
+    def get_all_projects(self):
+        with self.db.cursor(dictionary=True) as cursor_get_all_projects:
+            sql = "SELECT * FROM bidding.project ORDER BY project_name"
+            cursor_get_all_projects.execute(sql)
+            return cursor_get_all_projects.fetchall()

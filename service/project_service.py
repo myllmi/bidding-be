@@ -25,3 +25,6 @@ class ProjectService:
                 project_id = self.db.insert_project(dict_project)
                 self.queue_service.publish_event("project.load", {"project_id": project_id})
         self.queue_service.close_connection()
+
+    def get_all_projects(self):
+        return self.db.get_all_projects()

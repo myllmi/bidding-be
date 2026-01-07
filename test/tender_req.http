@@ -41,3 +41,8 @@ Content-Type: application/pdf
 POST http://localhost:8000/api/v1/tender/evaluate/f17afd76-da1d-4b1f-876b-22af442fba3f
 Authorization: Bearer {{access_token}}
 Accept: application/json
+
+### Get all tenders
+GET http://localhost:8000/api/v1/tender/list
+Authorization: Bearer {{access_token}}
+Accept: application/json

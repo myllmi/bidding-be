@@ -16,3 +16,6 @@ class TenderService:
 
     def evaluate_tender(self, tender_id):
         self.queue_service.publish_event("tender.evaluate", {"tender_id": tender_id})
+
+    def get_all_tender(self):
+        return self.db.get_all_tender()

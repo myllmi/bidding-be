@@ -19,3 +19,10 @@ def upload_file_project(file: UploadFile = File(...), project_service: ProjectSe
         shutil.copyfileobj(file.file, buffer)
     project_service.insert_project(file_path)
     return {}
+
+@router.get("/list",
+            summary="List all projects",
+            description="List all projects",
+            dependencies=[Depends(check_access_token)])
+def list_projects(project_service: ProjectService = Depends(ProjectService)):
+    return project_service.get_all_projects()

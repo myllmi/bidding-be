@@ -34,3 +34,11 @@ def upload_files_tender(files: List[UploadFile] = File(...), tender_service: Ten
 def evaluate_tender(tender_id: str, tender_service: TenderService = Depends(TenderService)):
     tender_service.evaluate_tender(tender_id)
     return {}
+
+@router.get("/list",
+             summary="List Tenders",
+             description="List Tenders",
+            dependencies=[Depends(check_access_token)])
+def list_tenders():
+    tender_service = TenderService()
+    return tender_service.get_all_tender()

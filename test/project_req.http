@@ -29,3 +29,8 @@ Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 
 < ./proj_upload.xlsx
 --boundary--
+
+### Get all projects
+GET http://localhost:8000/api/v1/project/list
+Accept: application/json
+Authorization: Bearer {{access_token}}

@@ -23,3 +23,8 @@ class TenderDao(Dao):
             cursor_insert_tender_file.execute(sql, val)
             self.db.commit()
 
+    def get_all_tender(self):
+        with self.db.cursor(dictionary=True) as cursor_get_tender:
+            sql = "SELECT t.*, c.customer_name FROM bidding.tender t LEFT JOIN bidding.customer c ON t.customer_id = c.id WHERE t.expired_at is null ORDER BY t.created_at DESC"
+            cursor_get_tender.execute(sql)
+            return cursor_get_tender.fetchall()
