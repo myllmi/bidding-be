@@ -12,7 +12,7 @@ Accept: application/json
 %}
 
 ### Refresh Access Token
-GET http://localhost:8000/api/v1/iam/refresh
+POST http://localhost:8000/api/v1/iam/refresh
 Accept: application/json
 
 > {%
@@ -46,3 +46,14 @@ Accept: application/json
 GET http://localhost:8000/api/v1/tender/list
 Authorization: Bearer {{access_token}}
 Accept: application/json
+
+### Get tender by ID
+GET http://localhost:8000/api/v1/tender/f17afd76-da1d-4b1f-876b-22af442fba3f
+Authorization: Bearer {{access_token}}
+Accept: application/json
+
+### Get tender candidates
+GET http://localhost:8000/api/v1/tender/candidate/499d5251-8feb-4b79-8e77-d94628e98f28
+Authorization: Bearer {{access_token}}
+Accept: application/json
+

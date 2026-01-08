@@ -28,3 +28,26 @@ class TenderDao(Dao):
             sql = "SELECT t.*, c.customer_name FROM bidding.tender t LEFT JOIN bidding.customer c ON t.customer_id = c.id WHERE t.expired_at is null ORDER BY t.created_at DESC"
             cursor_get_tender.execute(sql)
             return cursor_get_tender.fetchall()
+
+    def get_tender_by_id(self, tender_id):
+        with self.db.cursor(dictionary=True) as cursor_get_tender:
+            sql = ("SELECT t.id, t.object, t.reference, t.on_evaluation, te.rational_md, c.customer_name, bs.sector_name, ua.name AS analyst_name, um.name AS manager_name, te.id AS evaluation_id "
+                   "    FROM bidding.tender t "
+                   "        LEFT JOIN bidding.tender_evaluation te ON te.tender_id = t.id "
+                   "        LEFT JOIN bidding.customer c ON t.customer_id = c.id "
+                   "        LEFT JOIN bidding.business_sector bs ON t.business_sector_id = bs.id "
+                   "        LEFT JOIN bidding.user ua ON t.analyst_id = ua.id "
+                   "        LEFT JOIN bidding.user um ON t.manager_id = um.id "
+                   "    WHERE t.id = %s "
+                   "        AND t.expired_at is null "
+                   "        AND te.expired_at IS NULL")
+            val = (tender_id,)
+            cursor_get_tender.execute(sql, val)
+            return cursor_get_tender.fetchone()
+
+    def get_tender_candidate(self, evaluation_id):
+        with self.db.cursor(dictionary=True) as cursor_get_tender_candidate:
+            sql = "SELECT tc.*, r.name_professional FROM bidding.tender_candidate tc LEFT JOIN bidding.resume r ON tc.resume_id = r.id WHERE tc.evaluation_id = %s"
+            val = (evaluation_id,)
+            cursor_get_tender_candidate.execute(sql, val)
+            return cursor_get_tender_candidate.fetchall()

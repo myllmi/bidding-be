@@ -42,3 +42,19 @@ def evaluate_tender(tender_id: str, tender_service: TenderService = Depends(Tend
 def list_tenders():
     tender_service = TenderService()
     return tender_service.get_all_tender()
+
+@router.get("/{tender_id}",
+            summary="Get Tender",
+            description="Get Tender",
+            dependencies=[Depends(check_access_token)])
+def get_tender(tender_id: str):
+    tender_service = TenderService()
+    return tender_service.get_tender_by_id(tender_id)
+
+@router.get("/candidate/{evaluation_id}",
+            summary="Get Tender Candidates",
+            description="Get Tender Candidates",
+            dependencies=[Depends(check_access_token)])
+def get_tender_candidates(evaluation_id: str):
+    tender_service = TenderService()
+    return tender_service.get_tender_candidate(evaluation_id)
