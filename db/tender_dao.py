@@ -8,8 +8,8 @@ class TenderDao(Dao):
     def insert_tender(self):
         tender_id = str(uuid.uuid4())
         with self.db.cursor(dictionary=True) as cursor_insert_resume:
-            sql = "INSERT INTO bidding.tender (id, on_evaluation, customer_id, business_sector_id, analyst_id, manager_id, created_at) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            val = (tender_id, 'N', '4bea566d-cd83-4fbd-a11a-95c55201598e', '5e48dd22-69bd-4db1-9e33-8f02104d20ad',
+            sql = "INSERT INTO bidding.tender (id, object, on_evaluation, customer_id, business_sector_id, analyst_id, manager_id, created_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            val = (tender_id, 'Loading...', 'N', '4bea566d-cd83-4fbd-a11a-95c55201598e', '5e48dd22-69bd-4db1-9e33-8f02104d20ad',
                    '59703a4d-e067-4fdc-8f87-82600d7764f2', '00351a51-ac4c-4c83-9e15-edf0beb64e38',
                    datetime.now(timezone.utc))
             cursor_insert_resume.execute(sql, val)
