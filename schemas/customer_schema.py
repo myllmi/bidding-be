@@ -16,3 +16,4 @@ class CustomerModelRes(CamelModelBase):
     confirmed_at: datetime | None
     created_at: datetime
     expired_at: datetime | None
+    sector_name: str | None
