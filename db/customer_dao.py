@@ -19,3 +19,10 @@ class CustomerDao(Dao):
             cursor_customer.execute("SELECT c.*, bs.sector_name FROM bidding.customer c LEFT JOIN bidding.business_sector bs ON c.business_sector_id = bs.id "
                                     "WHERE c.expired_at IS NULL ORDER BY c.customer_name")
             return cursor_customer.fetchall()
+
+    def get_customer_by_id(self, customer_id):
+        with self.db.cursor(dictionary=True) as cursor_customer:
+            sql = "SELECT * FROM customer c WHERE c.id = %s"
+            val = (customer_id, )
+            cursor_customer.execute(sql, val)
+            return cursor_customer.fetchone()

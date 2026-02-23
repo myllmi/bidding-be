@@ -5,12 +5,11 @@ from db.dao import Dao
 
 
 class TenderDao(Dao):
-    def insert_tender(self):
+    def insert_tender(self, customer_id, sector_id, analyst_id, manager_id):
         tender_id = str(uuid.uuid4())
         with self.db.cursor(dictionary=True) as cursor_insert_resume:
             sql = "INSERT INTO bidding.tender (id, object, on_evaluation, customer_id, business_sector_id, analyst_id, manager_id, created_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-            val = (tender_id, 'Loading...', 'N', '4bea566d-cd83-4fbd-a11a-95c55201598e', '5e48dd22-69bd-4db1-9e33-8f02104d20ad',
-                   '59703a4d-e067-4fdc-8f87-82600d7764f2', '00351a51-ac4c-4c83-9e15-edf0beb64e38',
+            val = (tender_id, 'Loading...', 'N', customer_id, sector_id, analyst_id, manager_id,
                    datetime.now(timezone.utc))
             cursor_insert_resume.execute(sql, val)
             self.db.commit()
@@ -31,16 +30,17 @@ class TenderDao(Dao):
 
     def get_tender_by_id(self, tender_id):
         with self.db.cursor(dictionary=True) as cursor_get_tender:
-            sql = ("SELECT t.id, t.object, t.reference, t.on_evaluation, te.rational_md, c.customer_name, bs.sector_name, ua.name AS analyst_name, um.name AS manager_name, te.id AS evaluation_id "
-                   "    FROM bidding.tender t "
-                   "        LEFT JOIN bidding.tender_evaluation te ON te.tender_id = t.id "
-                   "        LEFT JOIN bidding.customer c ON t.customer_id = c.id "
-                   "        LEFT JOIN bidding.business_sector bs ON t.business_sector_id = bs.id "
-                   "        LEFT JOIN bidding.user ua ON t.analyst_id = ua.id "
-                   "        LEFT JOIN bidding.user um ON t.manager_id = um.id "
-                   "    WHERE t.id = %s "
-                   "        AND t.expired_at is null "
-                   "        AND te.expired_at IS NULL")
+            sql = (
+                "SELECT t.id, t.object, t.reference, t.on_evaluation, te.rational_md, c.customer_name, bs.sector_name, ua.name AS analyst_name, um.name AS manager_name, te.id AS evaluation_id "
+                "    FROM bidding.tender t "
+                "        LEFT JOIN bidding.tender_evaluation te ON te.tender_id = t.id "
+                "        LEFT JOIN bidding.customer c ON t.customer_id = c.id "
+                "        LEFT JOIN bidding.business_sector bs ON t.business_sector_id = bs.id "
+                "        LEFT JOIN bidding.user ua ON t.analyst_id = ua.id "
+                "        LEFT JOIN bidding.user um ON t.manager_id = um.id "
+                "    WHERE t.id = %s "
+                "        AND t.expired_at is null "
+                "        AND te.expired_at IS NULL")
             val = (tender_id,)
             cursor_get_tender.execute(sql, val)
             return cursor_get_tender.fetchone()
